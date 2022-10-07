@@ -10,6 +10,7 @@ class TmpRestCollection
     private $rest_route;
     private $iiif_path;
     private $media_path;
+    private $css_override;
 
     function __construct($tmpRCSettings)
     {
@@ -24,6 +25,7 @@ class TmpRestCollection
         if (empty($this->rest_route)) $this->rest_route = $tmpRCSettings['rest_route'];
         if(null !== get_option('tmp_remote_media_path') &&  get_option('tmp_remote_media_path')!=="") $this->media_path = get_option('tmp_remote_media_path');
         if(null !== get_option('tmp_remote_iiif_path') &&  get_option('tmp_remote_iiif_path')!=="") $this->iiif_path = get_option('tmp_remote_iiif_path');
+        if(null !== get_option('tmp_remote_css_path') &&  get_option('tmp_remote_css_path')!=="") $this->css_override = get_option('tmp_remote_css_path');
         $this->search_results_path = get_option('tmp_remote_search_results_path');
         if (empty($this->search_results_path)) $this->search_results_path =$tmpRCSettings['search_results_path'];
         $this->single_record_path = get_option('tmp_remote_single_record_path');
@@ -64,6 +66,13 @@ function register_settings()
     add_settings_field('tmp_remote_single_record_path', 'Path to page for item records', array($this, 'generate_settings_field_input_text'), 'tmp_remote_collections_settings', 'tmp_remote_collections_local_settings', array('field' => 'tmp_remote_single_record_path'));
     add_settings_field('tmp_remote_search_results_template', 'Override template for search results. This is relative to your currently active (sub)theme directory', array($this, 'generate_settings_field_input_text'), 'tmp_remote_collections_settings', 'tmp_remote_collections_local_settings', array('field' => 'tmp_remote_search_results_template','default'=>''));
     add_settings_field('tmp_remote_single_record_template', 'Override template for item records. This is relative to your currently active (sub)theme directory', array($this, 'generate_settings_field_input_text'), 'tmp_remote_collections_settings', 'tmp_remote_collections_local_settings', array('field' => 'tmp_remote_single_record_template'));
+    
+    // Add URL for override CSS
+    register_setting('tmp_remote_collections_settings', 'tmp_remote_css_path', ['sanitize_callback' => array($this, 'validate_url')]);
+    add_settings_field('tmp_remote_css_path', 'Full URL to override CSS file', array($this, 'generate_settings_field_input_text'), 'tmp_remote_collections_settings', 'tmp_remote_collections_local_settings', array('field' => 'tmp_remote_css_path'));
+    
+    
+    
 }
 
 function add_menu_item()
