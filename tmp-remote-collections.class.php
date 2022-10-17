@@ -15,19 +15,64 @@ class TmpRestCollection
     {
         $this->plugin_directory = WP_PLUGIN_DIR . '/tmp-remote-collections';
         $this->plugin_url = plugins_url() . '/tmp-remote-collections';
-        $this->rest_route = get_option('tmp_remote_rest_route');
-        $this->single_record_template = dirname( __FILE__ ) . $tmpRCSettings['single_record_template'];
-        $this->search_results_default_empty = isset($tmpRCSettings['search_results_default_empty'])?$tmpRCSettings['search_results_default_empty']:true;
-        if(null!==get_option('tmp_remote_single_record_template') && get_option('tmp_remote_single_record_template')!=="") $this->single_record_template = get_stylesheet_directory()."/".get_option('tmp_remote_single_record_template');
-        $this->search_results_template = dirname( __FILE__ ) . $tmpRCSettings['search_results_template'];
-        if(null!==get_option('tmp_remote_search_results_template') && get_option('tmp_remote_search_results_template')!=="") $this->search_results_template = get_stylesheet_directory()."/".get_option('tmp_remote_search_results_template');
-        if (empty($this->rest_route)) $this->rest_route = $tmpRCSettings['rest_route'];
-        if(null !== get_option('tmp_remote_media_path') &&  get_option('tmp_remote_media_path')!=="") $this->media_path = get_option('tmp_remote_media_path');
-        if(null !== get_option('tmp_remote_iiif_path') &&  get_option('tmp_remote_iiif_path')!=="") $this->iiif_path = get_option('tmp_remote_iiif_path');
-        $this->search_results_path = get_option('tmp_remote_search_results_path');
-        if (empty($this->search_results_path)) $this->search_results_path =$tmpRCSettings['search_results_path'];
-        $this->single_record_path = get_option('tmp_remote_single_record_path');
-        if (empty($this->single_record_path)) $this->single_record_path = $tmpRCSettings['single_record_path'];
+        // search_results_default_empty - do a search when there's no querystring? There's no UI for this setting
+        if(isset($tmpRCSettings[''])){  
+            $this->search_results_default_empty .= dirname( __FILE__ ) . $tmpRCSettings['search_results_default_empty'];
+        }else{
+            $this->search_results_default_empty = true;
+        }
+        // single_record_template
+        if(null!==get_option('tmp_remote_single_record_template') && get_option('tmp_remote_single_record_template')!==""){
+            $this->single_record_template = get_stylesheet_directory()."/".get_option('tmp_remote_single_record_template');
+        }elseif(isset($tmpRCSettings['single_record_template'])){
+            $this->single_record_template .= dirname( __FILE__ ) . $tmpRCSettings['single_record_template'];
+        }else{
+            $this->single_record_template = "";
+        }
+        // search_results_template
+        if(null!==get_option('tmp_remote_search_results_template') && get_option('tmp_remote_search_results_template')!==""){
+             $this->search_results_template = get_stylesheet_directory()."/".get_option('tmp_remote_search_results_template');
+        }elseif(isset($tmpRCSettings['search_results_template'])){
+            $this->search_results_template .= dirname( __FILE__ ) . $tmpRCSettings['search_results_template'];
+        }else{
+            $this->search_results_template = "";
+        }
+        // rest_route
+        if(null!==get_option('tmp_remote_rest_route')){
+            $this->rest_route = null!==get_option('tmp_remote_rest_route');
+        }elseif(isset($tmpRCSettings['rest_route'])){
+            $this->rest_route .= dirname( __FILE__ ) . $tmpRCSettings['rest_route'];
+        }else{
+            $this->rest_route = "https://appstg.themuseumplatform.com/demo/wp-json/tmp/v1/collections/";
+        }        
+        // tmp_remote_media_path. There's no tmpRCSettings setting for this
+        if(null!==get_option('tmp_remote_media_path')){
+            $this->media_path = null!==get_option('tmp_remote_media_path');
+        }else{
+            $this->media_path = "";
+        }        
+        // tmp_remote_iiif_path
+        if(null!==get_option('tmp_remote_iiif_path')){
+            $this->iiif_path = null!==get_option('tmp_remote_iiif_path');
+        }else{
+            $this->iiif_path = "";
+        }        
+        // search_results_path
+        if(null!==get_option('tmp_remote_search_results_path')){
+            $this->search_results_path = null!==get_option('tmp_remote_search_results_path');
+        }elseif(isset($tmpRCSettings['search_results_path'])){
+            $this->search_results_path .= dirname( __FILE__ ) . $tmpRCSettings['rest_rsearch_results_pathoute'];
+        }else{
+            $this->search_results_path = "";
+        }
+        // single_record_path
+        if(null!==get_option('tmp_remote_single_record_path')){
+            $this->single_record_path = null!==get_option('tmp_remote_single_record_path');
+        }elseif(isset($tmpRCSettings['search_results_path'])){
+            $this->single_record_path .= dirname( __FILE__ ) . $tmpRCSettings['single_record_path'];
+        }else{
+            $this->single_record_path = "";
+        }
         add_action('init', array($this, 'register_permalinks'));
         add_filter('the_content', array($this, 'construct_collection_content'));  
         add_filter('document_title_parts', array($this, 'construct_collection_title'));  
