@@ -39,7 +39,7 @@ class TmpRestCollection
         }
         // rest_route
         if(null!==get_option('tmp_remote_rest_route')){
-            $this->rest_route = null!==get_option('tmp_remote_rest_route');
+            $this->rest_route = get_option('tmp_remote_rest_route');
         }elseif(isset($tmpRCSettings['rest_route'])){
             $this->rest_route .= dirname( __FILE__ ) . $tmpRCSettings['rest_route'];
         }else{
@@ -47,19 +47,19 @@ class TmpRestCollection
         }        
         // tmp_remote_media_path. There's no tmpRCSettings setting for this
         if(null!==get_option('tmp_remote_media_path')){
-            $this->media_path = null!==get_option('tmp_remote_media_path');
+            $this->media_path = get_option('tmp_remote_media_path');
         }else{
             $this->media_path = "";
         }        
         // tmp_remote_iiif_path
         if(null!==get_option('tmp_remote_iiif_path')){
-            $this->iiif_path = null!==get_option('tmp_remote_iiif_path');
+            $this->iiif_path = get_option('tmp_remote_iiif_path');
         }else{
             $this->iiif_path = "";
         }        
         // search_results_path
         if(null!==get_option('tmp_remote_search_results_path')){
-            $this->search_results_path = null!==get_option('tmp_remote_search_results_path');
+            $this->search_results_path = get_option('tmp_remote_search_results_path');
         }elseif(isset($tmpRCSettings['search_results_path'])){
             $this->search_results_path .= dirname( __FILE__ ) . $tmpRCSettings['rest_rsearch_results_pathoute'];
         }else{
@@ -67,7 +67,7 @@ class TmpRestCollection
         }
         // single_record_path
         if(null!==get_option('tmp_remote_single_record_path')){
-            $this->single_record_path = null!==get_option('tmp_remote_single_record_path');
+            $this->single_record_path = get_option('tmp_remote_single_record_path');
         }elseif(isset($tmpRCSettings['search_results_path'])){
             $this->single_record_path .= dirname( __FILE__ ) . $tmpRCSettings['single_record_path'];
         }else{
